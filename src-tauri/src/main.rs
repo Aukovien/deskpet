@@ -76,5 +76,13 @@ fn calculate_mood(energy: f32, happiness: f32) -> String {
 }
 
 fn main() {
-    deskpet_lib::run()
+    tauri::Builder::default()
+        .manage(AppState(Mutex::new(PetState::default())))
+        .invoke_handler(tauri::generate_handler![
+            get_pet_state,
+            pet_interact,
+            tick_pet,
+        ])
+        .run(tauri::generate_context!())
+        .expect("error while running deskpet");
 }
